@@ -1,0 +1,130 @@
+﻿
+		<header class="mui-bar mui-bar-nav" style='background-image: linear-gradient(90deg,#0af,#0085ff);'>
+			<a class="mui-icon mui-icon-left-nav mui-pull-left load-link" style='color:white;' data-target="index.html"></a>
+			<h1 class="mui-title" style='color:white;'>历史订单</h1>
+		</header>
+		
+		<div class="mui-content">
+
+		</div>
+
+
+
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item load-link" data-target="homepage.html">
+				外卖
+			</a>
+			<a class="mui-tab-item load-link" data-target="discover.html">
+				发现
+			</a>
+			<a class="mui-tab-item load-link mui-active" data-target="history.html">
+				订单
+			</a>
+			<a class="mui-tab-item load-link" data-target="profile.html">
+				我的
+			</a>
+		</nav>
+		</div>
+		<script>
+//			$.getJSON('api/order-history.json',function (data) {
+            $.getJSON('/api/order/history',function (data) {
+                $('.mui-content').empty();
+
+                for( round = 0; round < 3; ++ round ) {
+
+                    var cardHeaderTitle = '';
+                    var cardHeaderStyle = "background-image: linear-gradient(90deg,#0af,#0085ff);color:white;";
+                    if( round == 0 ) cardHeaderTitle = '未支付订单';
+                    else if( round == 1 ) cardHeaderTitle = '已支付订单';
+                    else if( round == 2 ) cardHeaderTitle = '已收货订单';
+                    $('.mui-content').append(
+                        '<div class="mui-card">' +
+                        '	<div class="mui-card-header" style="' + cardHeaderStyle + '">' +
+                        		cardHeaderTitle + '<p style="color:white;">' + "January 18, 2016" + '</p>' +
+                        '	</div>' +
+						'</div>');
+
+                    for (i = 0; i < data.length; ++i) {
+                        var order = data[i];
+                        var Show = false;
+                        if ( round == order.status && order.status == 0) {
+                            Show = true;
+                            $('.mui-content').append(
+                                '<div class="mui-card">' +
+                                '	<div class="mui-card-header">' +
+                                '' + 	order.shop.name + '<p>' + order.generateTime + '</p>' +
+                                '	</div>' +
+                                '	<div class="mui-card-content">' +
+                                '		<div class="mui-card-content-inner" id="order-' + order.id + '-foodList">' +
+                                '		</div>' +
+                                '	</div>' +
+                                '	<div class="mui-card-footer">' +
+                                '		<a class="mui-card-link">取消订单</a>' +
+                                '		<a class="mui-card-link load-link" data-target="order.html?orderid="' + order.id + '>详情</a>' +
+                                '		<a class="mui-card-link load-link" data-target="pay.html?orderid=' + order.id + '">去支付</a>' +
+                                '	</div>' +
+                                '</div>');
+
+
+                        } else if ( round == order.status && order.status == 1) {
+                            Show = true;
+                            $('.mui-content').append(
+                                '<div class="mui-card">' +
+                                '	<div class="mui-card-header">' +
+                                '' + 	order.shop.name + '<p>' + order.generateTime + '</p>' +
+                                '	</div>' +
+                                '	<div class="mui-card-content">' +
+                                '		<div class="mui-card-content-inner" id="order-' + order.id + '-foodList">' +
+                                '		</div>' +
+                                '	</div>' +
+                                '	<div class="mui-card-footer">' +
+                                '		<a class="mui-card-link">催单</a>' +
+                                '		<a class="mui-card-link load-link" data-target="order.html?orderid="' + order.id + '">详情</a>' +
+                                '		<a class="mui-card-link">确认收货</a>' +
+                                '	</div>' +
+                                '</div>');
+                        } else if ( round == order.status && order.status == 2) {
+                            Show = true;
+                            $('.mui-content').append(
+                                '<div class="mui-card">' +
+                                '	<div class="mui-card-header">' +
+                                '' + 	order.shop.name + '<p>' + order.generateTime + '</p>' +
+                                '	</div>' +
+                                '	<div class="mui-card-content">' +
+                                '		<div class="mui-card-content-inner" id="order-' + order.id + '-foodList">' +
+                                '		</div>' +
+                                '	</div>' +
+                                '	<div class="mui-card-footer">' +
+                                '		<a class="mui-card-link">删除</a>' +
+                                '		<a class="mui-card-link load-link" data-target="order.html?orderid="' + order.id + '">详情</a>' +
+                                '		<a class="mui-card-link comment-link" data-target="comment.html?orderid=' + order.id + '">追加评论</a>' +
+                                '	</div>' +
+                                '</div>');
+                        }
+                        if(Show == true) {
+                            // load foodList
+                            for (j = 0; j < order.foodList.length; ++j) {
+                                $('#order-' + order.id + '-foodList').append(
+                                    '<div class="mui-row">' +
+                                    '	<div class="mui-col-xs-6 mui-text-left">' + order.foodList[j].foodName + '</div>' +
+                                    '	<div class="mui-col-xs-6 mui-text-right">' + order.foodList[j].foodPrice + ' * ' + order.foodList[j].foodCount + '</div>' +
+                                    '</div>');
+                            }
+                        }
+                    }// for loop status
+                }// for loop round
+                // add page bottom
+                $('.mui-content').append('<br><br><br>');
+                // activate load-links
+                $('a.load-link').on('click tap',function(){
+                    var url = $(this).data('target');
+                    var orderid = url.substr(url.indexOf('orderid=')+8);
+                    localStorage.orderid = orderid;
+                    loadWindow($(this).data('target'))
+                })
+				// activate href-links
+                $('a.comment-link').on('tap',function(){
+                    window.location.href= $(this).data('target')
+                })
+			})
+		</script>

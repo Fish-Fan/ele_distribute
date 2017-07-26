@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ele.mapper.OrderMapper">
+    <!--订单映射集-->
+    <resultMap id="order" type="com.ele.pojo.Order">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="avatar" column="avatar"/>
+        <result property="phoneNum" column="phone_num"/>
+        <result property="isNoName" column="is_no_name"/>
+        <result property="orderRemark" column="order_remark"/>
+        <result property="sumMoney" column="sum_money"/>
+        <result property="userId" column="user_id"/>
+        <result property="deliveryTime" column="delivery_time"/>
+        <result property="grade" column="grade"/>
+        <result property="address" column="address"/>
+        <result property="generateTime" column="generate_time"/>
+        <result property="status" column="status"/>
+        <result property="days" column="days"/>
+        <result property="weeks" column="weeks"/>
+        <result property="months" column="months"/>
+
+        <association property="shop" column="shop_id" select="com.ele.mapper.ShopMapper.findById"/>
+        <collection property="foodList" column="id" select="findOrderFoodByOrderId"/>
+    </resultMap>
+
+    <!--根据订单ID查找商品-->
+    <select id="findOrderFoodByOrderId" parameterType="int" resultType="com.ele.pojo.OrderFood">
+        select id,food_id,food_name,order_id,food_count,food_price from order_food_list where order_id = #{orderId}
+    </select>
+
+
+    <!--新增订单-->
+    <insert id="insertOrder" parameterType="com.ele.pojo.Order" useGeneratedKeys="true" keyProperty="id">
+        insert into `order`(username,avatar,phone_num,is_no_name,sum_money,user_id,address,generate_time,status,shop_id)
+        values(#{username},#{avatar},#{phoneNum},#{isNoName},#{sumMoney},#{userId},#{address},#{generateTime},#{status},#{shopId})
+    </insert>
+    
+    <!--插入该订单商品信息-->
+    <insert id="insertFoodList" parameterType="java.util.List">
+        insert into order_food_list(food_id,food_name,order_id,food_count,food_price)
+        values
+        <foreach collection="list" item="food" index="index" separator=",">
+            (
+              #{food.foodId},
+              #{food.foodName},
+              #{food.orderId},
+              #{food.foodCount},
+              #{food.foodPrice}
+            )
+        </foreach>
+    </insert>
+
+    <!--根据订单ID查找订单-->
+    <select id="findOrderById" parameterType="int" resultMap="order">
+        select * from `order` where id = #{id}
+    </select>
+
+
+    <!--根据用户ID查找历史订单-->
+    <select id="findHistoryOrderByUserId" parameterType="int" resultMap="order">
+        select * from `order` where user_id = #{userId}
+    </select>
+
+    <!--更新订单信息-->
+    <update id="updateOrder" parameterType="com.ele.pojo.Order">
+        update `order` set username = #{username},avatar = #{avatar},status = #{status},is_no_name = #{isNoName},order_remark = #{orderRemark},delivery_time = #{deliveryTime},address = #{address},finish_time=#{finishTime}
+        where id = #{id}
+    </update>
+
+
+    <!--计算商家配送时间平均值-->
+    <select id="computedDeliveryTime" parameterType="int" resultType="double">
+        select sum(delivery_time)/count(*) from `order` where shop_id = #{shopId}
+    </select>
+
+    <!--更新商家配送时间-->
+    <update id="updateShopDeliveryTime" parameterType="com.ele.pojo.Shop">
+        update shop set delivery_time = #{deliveryTime} where id = #{id}
+    </update>
+
+    <!--根据商品ID查找商品-->
+    <select id="findGoodById" parameterType="int" resultType="com.ele.pojo.ShopFood">
+        select * from shop_food where id = #{id}
+    </select>
+
+    <!--更新商品月销量-->
+    <update id="updateGoodMonthlyCount" parameterType="com.ele.pojo.ShopFood">
+        update shop_food set monthly_counts = #{monthlyCounts} where id = #{id}
+    </update>
+
+    <!--根据天来查找订单-->
+    <select id="selectOrderByDay" parameterType="int" resultMap="order">
+        select DATE_FORMAT(generate_time,'%Y%m%d') days,`order`.id,`order`.username,`order`.avatar,`order`.phone_num,`order`.is_no_name,`order`.order_remark,`order`.sum_money,`order`.user_id,`order`.delivery_time,`order`.grade,`order`.address,`order`.generate_time,`order`.finish_time,`order`.`status`
+        from `order` where `order`.shop_id = #{shopId};
+    </select>
+
+    <!--根据周来查找订单-->
+    <select id="selectOrderByWeek" parameterType="int" resultMap="order">
+        select DATE_FORMAT(generate_time,'%Y%u') weeks,`order`.id,`order`.username,`order`.avatar,`order`.phone_num,`order`.is_no_name,`order`.order_remark,`order`.sum_money,`order`.user_id,`order`.delivery_time,`order`.grade,`order`.address,`order`.generate_time,`order`.finish_time,`order`.`status`
+        from `order` where `order`.shop_id = #{shopId};
+    </select>
+
+    <!--根据月份查找订单-->
+    <select id="selectOrderByMonth" parameterType="int" resultMap="order">
+        select DATE_FORMAT(generate_time,'%Y%m') months,`order`.id,`order`.username,`order`.avatar,`order`.phone_num,`order`.is_no_name,`order`.order_remark,`order`.sum_money,`order`.user_id,`order`.delivery_time,`order`.grade,`order`.address,`order`.generate_time,`order`.finish_time,`order`.`status`
+        from `order` where `order`.shop_id = #{shopId};
+    </select>
+
+    <!--查询今日未接订单-->
+    <select id="selectUnGetOrderByNowDays" resultMap="order">
+        SELECT * FROM `order` WHERE TO_DAYS(generate_time) = TO_DAYS(NOW()) where status = 2
+    </select>
+
+    <!--查询今日已接订单-->
+    <select id="selectGetOrderByNowDays" resultMap="order">
+        select * from `order` where TO_DAYS(generate_time) = TO_DAYS(NOW()) where status in (3,4,5)
+    </select>
+
+    <!--查询今日已收货订单-->
+    <select id="selectFinishOrderByNowDays" resultMap="order">
+        select * from `order` where TO_DAYS(generate_time) = TO_DAYS(NOW()) where status in (4,5)
+    </select>
+
+
+</mapper>

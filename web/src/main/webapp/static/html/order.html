@@ -1,0 +1,208 @@
+<style>
+    header {
+        height: 60px !important;
+    }
+</style>
+<header class="mui-bar mui-bar-nav" style="background-image: linear-gradient(90deg,#0af,#0085ff);color:white;">
+    <a class="mui-icon mui-icon-left-nav mui-pull-left" style="color:white" data-target="history.html"></a>
+    <h1 class="mui-title">
+        <div style="color:white">订单配送至</div>
+        <div style='position:relative; top:-20px;color:white;' id="addressHeader">天津工业大学软件园</div>
+    </h1>
+</header>
+
+<br/>
+<br/>
+<br/>
+
+<div class="mui-card">
+    <div class="mui-card-content">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell mui-collapse" id="selectAddressLi">
+                <a id="lastAddressLink" class="mui-navigate-right" href="#">选择收货地址</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="mui-card">
+    <div class="mui-card-header mui-text-center">
+        <img src="" alt="" id="shopAvatar" style="width: 50px;height: 50px;border-radius: 50%">
+        <p style="color:#444;width:100%;" id="shop-name"></p>
+    </div>
+    <div class="mui-card-content">
+        <div class="mui-card-content-inner" id="foodList">
+        </div>
+    </div>
+</div>
+
+
+
+<div class="mui-card">
+    <div class="mui-card-content">
+        <ul class="mui-table-view mui-table-view-chevron">
+            <li class="mui-table-view-cell">
+                在线支付
+            </li>
+        </ul>
+        <ul class="mui-table-view mui-table-view-chevron">
+            <li id="offCanvas_switch" class="mui-table-view-cell">
+                匿名购买
+                <style>
+                    .ios-button-content {
+                        height: 24px;
+                        width: 48px;
+                        -webkit-transition: height 0.3s ease-in, width 0.3s ease-in, background-color 0.4s ease;
+                        -moz-transition: height 0.3s ease-in, width 0.3s ease-in, background-color 0.4s ease;
+                        background-color: lightgray;
+                        border-radius: 12px;
+                        display: inline-block;
+                        position: absolute;
+                        right: 16px;
+                    }
+
+                    .ios-button-circle {
+                        width: 0px;
+                        height: 0px;
+                        border-color: white;
+                        border-style: solid;
+                        border-width: 12px;
+                        border-radius: 12px;
+                        box-shadow: 0 0 2px dimgray;
+                        -moz-transition: transform 0.3s ease, margin 0.3s ease, border 1s ease;
+                        -webkit-transition: transform 0.3s ease, margin 0.3s ease, border 1s ease;
+                    }
+                </style>
+
+                <div class="ios-button-content" onclick="item_click(0);">
+                    <div class="ios-button-circle">
+                    </div>
+                </div>
+
+
+            </li>
+        </ul>
+        <ul class="mui-table-view mui-table-view-chevron">
+            <li class="mui-table-view-cell">
+                <a class="mui-navigate-right">
+                    口味偏好/餐具份数
+                </a>
+            </li>
+        </ul>
+        <ul class="mui-table-view mui-table-view-chevron">
+            <li class="mui-table-view-cell">
+                <a class="mui-navigate-right">
+                    其它备注
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<nav class="mui-bar mui-bar-tab" style="height:50px;">
+    <ul class="mui-table-view" style="height:50px;">
+        <li class="mui-table-view-cell">
+            <span id="sumMoneySpan"></span>
+            <button class="mui-btn mui-btn-blue" id="postDataBtn">
+                去支付
+            </button>
+        </li>
+    </ul>
+</nav>
+
+<script>
+    $('[data-target]').on('click tap', function () {
+        loadWindow($(this).data('target'))
+    })
+
+//    var WebRoot = 'http://localhost:8080/';
+    var responseOrder = {};
+
+//    $.getJSON('api/order.json', function (data) {
+    $.getJSON('/api/order/pay/'+localStorage.orderid, function (data) {
+//        localStorage.orderid = data.id;// modified on 7/18/2017
+        responseOrder = data;
+        $('#addressHeader').text(data.address);
+        $('#lastAddressLink').text(data.address);
+        $('#shop-name').text(data.shop.name);
+        $('#shopAvatar').attr("src",data.shop.avatar);
+        $('#foodList').empty();
+        for (i = 0; i < data.foodList.length; ++i) {
+            $('#foodList').append(
+                '<div class="mui-row">' +
+                '<div class="mui-col-xs-6 mui-text-left">' + data.foodList[i].foodName + '</div>' +
+                '<div class="mui-col-xs-6 mui-text-right">' + data.foodList[i].foodPrice + ' * ' + data.foodList[i].foodCount + '</div>' +
+                '</div>');
+        }
+        $('#foodList').append(
+            '<div class="mui-row">' +
+                '<div class="mui-col-xs-6 mui-text-left">' +
+                    '红包' +
+                '</div>' +
+                '<div class="mui-col-xs-6">' +
+                    '<div class="mui-row">' +
+                        '<div class="mui-col-xs-10 mui-text-right">' +
+                            '<span class="mui-badge mui-badge-danger">9个可用</span>' +
+                        '</div>' +
+                        '<div class="mui-col-xs-1">' +
+                        '</div>' +
+                        '<div class="mui-col-xs-1 mui-text-right">' +
+                            '<a class="mui-navigate-right" style="position:relative;left:10px;">' +
+                                '&nbsp;' +
+                            '</a>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+        );
+        $('#foodList').append(
+            '<div class="mui-row">' +
+            '<div class="mui-col-xs-6 mui-text-left">合计</div>' +
+            '<div class="mui-col-xs-6 mui-text-right">' + data.sumMoney + '</div>' +
+            '</div>'
+        );
+        $('#sumMoneySpan').text("￥" + data.sumMoney);
+    });
+
+    function item_click(n) {
+        if(responseOrder.isNoName == "true") {
+            responseOrder.isNoName = "false";
+        } else {
+            responseOrder.isNoName = "true";
+        }
+        var items = document.getElementsByClassName("ios-button-circle");
+        with (items[n].style) {
+            marginLeft = (marginLeft == '24px') ? '0px' : '24px';
+        }
+        var boards = document.getElementsByClassName("ios-button-content");
+        with (boards[n].style) {
+            backgroundColor = (backgroundColor == 'limegreen') ? 'lightgray' : 'limegreen';
+        }
+    }
+
+    $('#postDataBtn').click(function () {
+        var addressList = $('input[name="address"]');
+        $.each(addressList,function (index, val) {
+            if($(val).prop("checked")) {
+                responseOrder.address = $(val).val();
+            }
+        });
+        axios.post('/api/order/pay/confirm',responseOrder).then(function (res) {
+            window.location.href = "index.html?load=pay.html";
+        });
+    });
+</script>
+
+
+
+<script>
+    axios.get('/user/profile/address').then(function (res) {
+        var addressList = res.data;
+        console.log(addressList);
+        var root = $('#selectAddressLi');
+        for(var i = 0;i < addressList.length;i++) {
+            root.append('<div class="mui-collapse-content"><div class="mui-input-row mui-radio"><label>' + addressList[i].userAddress + '</label><input name="address" value="' + addressList[i].userAddress +'" type="radio"></div></div>');
+        }
+    })
+
+
+</script>

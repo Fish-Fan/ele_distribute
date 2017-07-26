@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ele.mapper.UserMapper">
+    <select id="findById" parameterType="int" resultType="com.ele.pojo.User">
+        select * from user where id = #{id}
+    </select>
+
+    <!--注册用户-->
+    <select id="insertUser" parameterType="com.ele.pojo.User">
+        insert into user(username,password,email,avatar,phone_num,weixin)
+        values(#{username},#{password},#{email},#{avatar},#{phoneNum},#{weixin})
+    </select>
+
+
+    <!--根据email查找用户-->
+    <select id="findByEmail" parameterType="string" resultType="com.ele.pojo.User">
+        select * from user where email = #{email}
+    </select>
+
+    <!--根据用户ID查找地址-->
+    <select id="getUserAddress" resultType="com.ele.pojo.UserAddress" parameterType="int">
+        select * from user_address where user_id = #{userId}
+    </select>
+
+    <!--更新用户地址-->
+    <update id="updateUserAddress" parameterType="com.ele.pojo.UserAddress">
+        update user_address set user_address = #{userAddress} where id = #{id}
+    </update>
+
+    <!--登陆-->
+    <select id="loginUser" parameterType="string" resultType="com.ele.pojo.User">
+        SELECT * FROM user WHERE email = #{email} AND password = #{password}
+    </select>
+
+    <!--更新用户状态-->
+    <update id="statusUser" parameterType="com.ele.pojo.User">
+        UPDATE user SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <!--获取用户收藏的商家-->
+    <resultMap id="likeToShop" type="com.ele.pojo.Like">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="shopId" column="shop_id"/>
+
+        <association property="shop" column="shop" select="com.ele.mapper.ShopMapper.findById"/>
+    </resultMap>
+
+
+    <select id="getCollectShopByUserId" parameterType="int" resultType="com.ele.pojo.Like">
+        select * from `like` where user_id = #{userId}
+    </select>
+
+    <!--收藏商家-->
+    <insert id="collectShop" parameterType="com.ele.pojo.Like">
+        insert into `like`(user_id,shop_id)
+        values(#{userId},#{shopId})
+    </insert>
+
+    <!--取消收藏商家-->
+    <delete id="uncollectShop" parameterType="com.ele.pojo.Like">
+        delete from `like` where user_id = #{userId} and shop_id = #{shopId}
+    </delete>
+
+    <!--增加用户地址-->
+    <insert id="addAddress" parameterType="com.ele.pojo.UserAddress" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO user_address(user_id,user_address)
+    VALUES(#{userId},#{userAddress})
+    </insert>
+    <!--删除用户地址-->
+    <select id="delectUserAddress" parameterType="int" resultType="com.ele.pojo.UserAddress">
+    DELETE FROM user_address  WHERE id = #{id}
+    </select>
+
+    <!--更新用户头像-->
+    <update id="updateAvatar" parameterType="com.ele.pojo.User">
+        update `user` set avatar = #{avatar} where id = #{id}
+    </update>
+
+    <!--更新用户名-->
+    <update id="updateUserName" parameterType="com.ele.pojo.User" >
+    UPDATE `user` SET username = #{username} WHERE id = #{id}
+    </update>
+
+    <!--更新用户地址-->
+    <update id="updateLastAddress" parameterType="com.ele.pojo.User">
+        UPDATE `user` set last_address = #{lastAddress} where id = #{id}
+    </update>
+
+</mapper>

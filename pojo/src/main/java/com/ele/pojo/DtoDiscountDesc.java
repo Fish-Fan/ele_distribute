@@ -1,9 +1,11 @@
 package com.ele.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by yanfeng-mac on 2017/6/28.
  */
-public class DtoDiscountDesc {
+public class DtoDiscountDesc implements Serializable{
     private Integer id;
     private String discountDesc;
 

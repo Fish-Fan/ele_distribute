@@ -1,9 +1,11 @@
 package com.ele.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by yanfeng-mac on 2017/7/11.
  */
-public class OrderImg {
+public class OrderImg implements Serializable {
     private Integer id;
     private Integer orderId;
     private String orderImg;

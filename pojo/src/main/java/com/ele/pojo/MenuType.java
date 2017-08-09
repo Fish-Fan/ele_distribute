@@ -1,9 +1,11 @@
 package com.ele.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by yanfeng-mac on 2017/7/13.
  */
-public class MenuType {
+public class MenuType implements Serializable{
     private Integer menuTypeId;
     private String menuName;
     private String menuImg;

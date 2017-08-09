@@ -6,8 +6,6 @@ import com.ele.pojo.Like;
 import com.ele.pojo.User;
 import com.ele.pojo.UserAddress;
 import com.ele.service.UserService;
-import com.ele.service_impl.UserServiceImpl;
-import com.ele.util.EleUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +22,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     /**
      * 返回用户地址
@@ -74,7 +72,7 @@ public class UserController {
     public String delectUserAddress(@RequestBody UserAddress userAddress,HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
         User user = (User) httpSession.getAttribute("user");
-        boolean result = EleUtil.checkUserHasAddress(user,userAddress.getId(),userService);
+        boolean result = userService.checkUserHasAddress(user,userAddress.getId());
         if(result) {
             userService.delectUserAddress(userAddress);
             return "success";

@@ -2,7 +2,6 @@ package com.ele.controller;
 
 import com.ele.pojo.Shop;
 import com.ele.service.ShopService;
-import com.ele.service_impl.ShopServiceImpl;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,7 @@ import java.util.List;
 @Controller
 public class IndexController {
     @Autowired
-    private ShopServiceImpl shopService;
+    private ShopService shopService;
 
     /**
      * 获取首页商家信息及活动信息(未做)

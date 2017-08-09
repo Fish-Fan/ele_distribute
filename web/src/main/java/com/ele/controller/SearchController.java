@@ -4,7 +4,6 @@ import com.ele.dto.SearchDTO;
 import com.ele.pojo.Shop;
 import com.ele.pojo.ShopFood;
 import com.ele.service.SearchService;
-import com.ele.service_impl.SearchServiceImpl;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,7 @@ import java.util.List;
 @Controller
 public class SearchController {
     @Autowired
-    private SearchServiceImpl searchService;
+    private SearchService searchService;
 
     /**
      * 返回搜索到的数据

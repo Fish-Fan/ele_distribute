@@ -7,10 +7,6 @@ import com.ele.pojo.User;
 import com.ele.service.OrderService;
 import com.ele.service.RewardService;
 import com.ele.service.UserService;
-import com.ele.service_impl.OrderServiceImpl;
-import com.ele.service_impl.RewardServiceImpl;
-import com.ele.service_impl.UserServiceImpl;
-import com.ele.util.EleUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,11 +21,11 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class RewardController {
     @Autowired
-    private RewardServiceImpl rewardService;
+    private RewardService rewardService;
     @Autowired
-    private OrderServiceImpl orderService;
+    private OrderService orderService;
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
 
     /**
@@ -45,7 +41,7 @@ public class RewardController {
 //        User user = (User) session.getAttribute("user");
         User user = userService.findById(1);
 
-        boolean result = EleUtil.userHasOrder(user,orderId,orderService);
+        boolean result = orderService.userHasOrder(user,orderId);
         Order order = orderService.findOrderById(orderId);
 
         if(result) {
@@ -69,7 +65,7 @@ public class RewardController {
         HttpSession session = req.getSession();
 //        User user = (User) session.getAttribute("user");
         User user = userService.findById(1);
-        boolean result = EleUtil.userHasOrder(user,orderId,orderService);
+        boolean result = orderService.userHasOrder(user,orderId);
         Order order = null;
 
         if(result) {

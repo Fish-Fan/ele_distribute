@@ -1,9 +1,11 @@
 package com.ele.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by yanfeng-mac on 2017/6/27.
  */
-public class FoodType {
+public class FoodType implements Serializable{
     private Integer foodTypeId;
     private String shopFoodType;
     private Integer shopId;

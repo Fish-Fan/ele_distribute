@@ -1,9 +1,11 @@
 package com.ele.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by yanfeng-mac on 2017/6/27.
  */
-public class ShopTypeReal {
+public class ShopTypeReal implements Serializable {
     private Integer shopTypeId;
     private Integer shopId;
 

@@ -226,4 +226,20 @@ public class OrderServiceImpl implements OrderService{
         return orderMapper.selectFinishOrderByNowDays();
     }
 
+    /**
+     * 检查用户是否拥有这个订单
+     * @param user
+     * @param orderId
+     * @return
+     */
+    public boolean userHasOrder(User user, Integer orderId) {
+        List<Order> orderList = findHistoryOrderByUserId(user.getId());
+        for(Order order: orderList) {
+            if(order.getId() == orderId)
+                return true;
+        }
+
+        return false;
+    }
+
 }

@@ -150,4 +150,36 @@ public class UserServiceImpl implements UserService{
     public void updateLastAddress(User user) {
         userMapper.updateLastAddress(user);
     }
+
+    /**
+     * 检查用户是否收藏了这个商家
+     * @param user
+     * @param shopId
+     * @return
+     */
+    public boolean userIsLikeShop(User user, Integer shopId) {
+        List<Like> likeList = getCollectShopByUserId(user.getId());
+        for(Like like: likeList) {
+            if(like.getShopId() == shopId)
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 检查用户是否拥有该地址
+     * @param user
+     * @param addressId
+     * @return
+     */
+    public boolean checkUserHasAddress(User user,Integer addressId) {
+        List<UserAddress> addressList = getUserAddress(user);
+        for(UserAddress address: addressList) {
+            if(address.getId() == addressId)
+                return true;
+        }
+
+        return false;
+    }
 }

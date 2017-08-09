@@ -35,4 +35,8 @@ public interface UserService {
     void updateUserName(User user);
 
     void updateLastAddress(User user);
+
+    boolean userIsLikeShop(User user, Integer shopId);
+
+    boolean checkUserHasAddress(User user,Integer addressId);
 }

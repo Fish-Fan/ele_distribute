@@ -8,9 +8,6 @@ import com.ele.pojo.User;
 import com.ele.service.OrderService;
 import com.ele.service.ShopService;
 import com.ele.service.UserService;
-import com.ele.service_impl.OrderServiceImpl;
-import com.ele.service_impl.ShopServiceImpl;
-import com.ele.service_impl.UserServiceImpl;
 import com.ele.socket.SocketHandler;
 import com.ele.util.EleUtil;
 import com.google.gson.Gson;
@@ -30,11 +27,11 @@ import java.util.List;
 @RequestMapping("/api/order")
 public class OrderController {
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
     @Autowired
-    private OrderServiceImpl orderService;
+    private OrderService orderService;
     @Autowired
-    private ShopServiceImpl shopService;
+    private ShopService shopService;
     @Autowired
     private SocketHandler socketHandler;
 

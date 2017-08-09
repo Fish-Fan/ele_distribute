@@ -3,8 +3,7 @@ package com.ele.controller;
 import com.ele.pojo.MenuType;
 import com.ele.pojo.MenuTypeReal;
 import com.ele.pojo.Shop;
-import com.ele.service.MenuService;
-import com.ele.service_impl.MenuServiceImpl;
+import com.ele.service.MenuService;;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,7 @@ import java.util.List;
 @RequestMapping("/menu")
 public class MenuController {
     @Autowired
-    private MenuServiceImpl menuService;
+    private MenuService menuService;
 
     /**
      * 将商家添加到Menu

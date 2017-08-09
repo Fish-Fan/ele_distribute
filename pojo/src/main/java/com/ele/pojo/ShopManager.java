@@ -1,9 +1,11 @@
 package com.ele.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by yanfeng-mac on 2017/7/13.
  */
-public class ShopManager {
+public class ShopManager implements Serializable {
     private Integer shopId;
     private String phoneNum;
     private String password;

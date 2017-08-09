@@ -1,9 +1,11 @@
 package com.ele.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by yanfeng-mac on 2017/7/13.
  */
-public class MenuTypeReal {
+public class MenuTypeReal implements Serializable{
     private Integer id;
     private Integer shopId;
     private Integer menuTypeId;

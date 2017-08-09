@@ -1,10 +1,12 @@
 package com.ele.pojo;
 
 
+import java.io.Serializable;
+
 /**
  * Created by yanfeng-mac on 2017/6/27.
  */
-public class Like {
+public class Like implements Serializable{
     private Integer id;
     private Integer userId;
     private Integer shopId;

@@ -1,11 +1,12 @@
 package com.ele.pojo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by yanfeng-mac on 2017/7/3.
  */
-public class ShopReward {
+public class ShopReward implements Serializable {
     private Integer id;
     private Integer userId;
     private String username;

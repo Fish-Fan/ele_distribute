@@ -49,5 +49,7 @@ public interface OrderService {
 
     List<Order> selectFinishOrderByNowDays();
 
+    boolean userHasOrder(User user, Integer orderId);
+
 
 }

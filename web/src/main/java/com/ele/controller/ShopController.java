@@ -4,9 +4,6 @@ import com.ele.dto.Goods;
 import com.ele.pojo.*;
 import com.ele.service.ShopService;
 import com.ele.service.UserService;
-import com.ele.service_impl.ShopServiceImpl;
-import com.ele.service_impl.UserServiceImpl;
-import com.ele.util.EleUtil;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,9 +19,9 @@ import java.util.List;
 @Controller
 public class ShopController {
     @Autowired
-    private ShopServiceImpl shopService;
+    private ShopService shopService;
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
     /**
      * 返回商家信息
      * @param id
@@ -37,7 +34,7 @@ public class ShopController {
 //        User user = (User) session.getAttribute("user");
         User user = userService.findById(1);
 
-        boolean isLike = EleUtil.userIsLikeShop(user,id,userService);
+        boolean isLike = userService.userIsLikeShop(user,id);
         Shop shop = shopService.findById(id);
         shop.setDiscountDescList(shopService.findDiscountDescById(id));
         shop.setImgList(shopService.findShopImgById(id));

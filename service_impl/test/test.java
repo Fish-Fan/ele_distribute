@@ -1,10 +1,14 @@
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by yanfeng-mac on 2017/8/9.
@@ -44,6 +48,29 @@ public class test {
 
         jedis.close();
         jedisPool.destroy();
+    }
+
+    //jedis直连redis集群
+    @Test
+    public void testJedisRedisCluster() throws IOException {
+        GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+        poolConfig.setMaxTotal(10);
+        poolConfig.setMinIdle(5);
+
+        Set<HostAndPort> hostAndPortSet = new HashSet<>();
+        hostAndPortSet.add(new HostAndPort("192.168.1.215",6000));
+        hostAndPortSet.add(new HostAndPort("192.168.1.215",6001));
+        hostAndPortSet.add(new HostAndPort("192.168.1.215",6002));
+        hostAndPortSet.add(new HostAndPort("192.168.1.215",6003));
+        hostAndPortSet.add(new HostAndPort("192.168.1.215",6004));
+        hostAndPortSet.add(new HostAndPort("192.168.1.215",6005));
+
+        JedisCluster cluster = new JedisCluster(hostAndPortSet,poolConfig);
+
+        String name1 = cluster.get("name:1");
+        System.out.println("name:1 -> " + name1);
+
+        cluster.close();
     }
 
 
